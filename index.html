@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess the Number</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<style>body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    color: #333;
+  }
+  
+  input {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    width: 80%;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .feedback {
+    margin: 20px 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .feedback.correct {
+    color: green;
+  }
+  
+  .feedback.incorrect {
+    color: red;
+  }
+  
+  #attempts {
+    font-size: 16px;
+    color: #555;
+  }
+  </style>
+<body>
+  <div class="container">
+    <h1>Guess the Number</h1>
+    <p>Let's do this. Think of a number between 1 and 100. Input it to see if you are correct.</p>
+    
+    <label for="guess">Your Guess:</label>
+    <input type="number" id="guess" placeholder="Enter a number" />
+    <button id="submit-guess">Submit</button>
+    
+    <div class="feedback" id="feedback"></div>
+    <p id="attempts">Attempts: 0</p>
+    <button id="restart">Restart</button>
+  </div>
+
+  <script >// JavaScript for Guess the Number Game
+
+ // JavaScript for Guess the Number Game
+
+const maxAttempts = 10; // Set the maximum number of guesses
+let secretNumber = Math.floor(Math.random() * 100) + 1; // Generate a random number
+let attempts = 0;
+
+// DOM Elements
+const guessInput = document.getElementById("guess");
+const submitButton = document.getElementById("submit-guess");
+const feedbackDiv = document.getElementById("feedback");
+const attemptsDisplay = document.getElementById("attempts");
+
+// Create and add the Restart button
+const restartButton = document.createElement("button");
+restartButton.textContent = "Restart Game";
+restartButton.style.display = "none"; // Initially hidden
+restartButton.style.marginTop = "20px";
+document.querySelector(".container").appendChild(restartButton);
+
+// Event Listener for Submit Button
+submitButton.addEventListener("click", () => {
+  const userGuess = parseInt(guessInput.value);
+
+  // Increase the attempt count
+  attempts++;
+
+  // Validate the input
+  if (!userGuess || userGuess < 1 || userGuess > 100) {
+    feedbackDiv.textContent = "Please enter a number between 1 and 100.";
+    feedbackDiv.className = "feedback incorrect";
+    attempts--;
+    return;
+  }
+
+  // Check if the guess is correct
+  if (userGuess === secretNumber) {
+    feedbackDiv.textContent = `Correct! The number was ${secretNumber}.`;
+    feedbackDiv.className = "feedback correct";
+    submitButton.disabled = true; // Disable the button after the correct guess
+    restartButton.style.display = "block"; // Show the restart button
+    return;
+  }
+
+  // Check if the guess is too high or too low
+  if (userGuess > secretNumber) {
+    feedbackDiv.textContent = "Too high! Try again.";
+    feedbackDiv.className = "feedback incorrect";
+  } else {
+    feedbackDiv.textContent = "Too low! Try again.";
+    feedbackDiv.className = "feedback incorrect";
+  }
+
+  // Update the attempts display
+  attemptsDisplay.textContent = `Attempts: ${attempts}`;
+
+  // Check if the player has run out of attempts
+  if (attempts >= maxAttempts) {
+    feedbackDiv.textContent = `Game over! The correct number was ${secretNumber}.`;
+    feedbackDiv.className = "feedback incorrect";
+    submitButton.disabled = true; // Disable further guesses
+    restartButton.style.display = "block"; // Show the restart button
+  }
+
+  // Clear the input field
+  guessInput.value = "";
+});
+
+// Event Listener for Restart Button
+restartButton.addEventListener("click", () => {
+  // Reset game variables
+  attempts = 0;
+  secretNumber = Math.floor(Math.random() * 100) + 1; // Generate a new random number
+  feedbackDiv.textContent = "";
+  feedbackDiv.className = "";
+  attemptsDisplay.textContent = "Attempts: 0";
+  guessInput.value = "";
+  submitButton.disabled = false; // Re-enable the submit button
+  restartButton.style.display = "none"; // Hide the restart button
+});
+
+
+  </script>
+</body>
+</html>
